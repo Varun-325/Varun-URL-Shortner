@@ -3,7 +3,8 @@ import {User as userModel} from '../models/user/user.model.js';
 import jwt from 'jsonwebtoken';
 
 const oAuthClient = new OAuth2Client(
-  process.env.GOOGLE_CLIENT_ID
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET,
 );
 
 export const loginWithGoogle = async (req, res) => {
@@ -29,14 +30,9 @@ export const loginWithGoogle = async (req, res) => {
             });
 
             } catch (error) {
-            if (error.payload) {
-                console.error("Token audience:", error.payload.aud);
-            }
             console.error("Error in validating google token", error.message);
             return res.status(500).json({ status: "INTERNAL_SERVER_ERROR", message: "Error in validating google token id"});
-            }
-
-
+        }
         const { 
             email, 
             picture, 
