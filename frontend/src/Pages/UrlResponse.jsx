@@ -35,17 +35,7 @@ export default function UrlResponse(props) {
 
         <br />
         <br />
-        <QRCodeSVG
-          imageSettings={{
-            excavate: true,
-            src: "/HomeBackground.png",   // 🔴 Problem here
-            height: 100,
-            width: 100,
-          }}
-          value={surl}
-          size={400}
-        />
-
+        <QRCodeSVG value={surl} size={400} />
         <br />
         <Text size="md" color="dimmed">
           Scan the QR code to visit the shortened URL.
