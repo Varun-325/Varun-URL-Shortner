@@ -16,7 +16,6 @@ function App() {
             <Route path='/login' element={<LoginPage/>} />
             <Route path="/profile" element={<ProfilePage/>}/>
             <Route path="/url/shortner" element={<UrlShortner/>}/>
-            <Route path="/url/history" element={<UrlHistory />} />
             <Route element={<PrivateRoute/>}>
             </Route>
         </Routes>
