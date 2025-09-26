@@ -51,16 +51,8 @@ export default function UrlResponse(props) {
           </CopyButton>
           <Container mt={40} style={{ textAlign: "center" }}>
             <QRCodeSVG
-              imageSettings={{
-                excavate: true,
-                src: "https://mentorpick.com/static/images/mplogo.png",
-                height: 100,
-                width: 100,
-              }}
               value={surl}
-              size={400}
             >
-              <Image src={"https://mentorpick.com/static/images/mplogo.png"} />
             </QRCodeSVG>
           </Container>
         </Container>
