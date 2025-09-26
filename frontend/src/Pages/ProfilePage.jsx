@@ -12,13 +12,13 @@ export default function Profile() {
 
    const [user, setUser] = useState({})
    const getProfileData = async () => {
-       try {
-           let data = await obj.get("user/me")
-           setUser(data)
-           console.log(data);
-       } catch (error) {
-           console.log(error);
-       }
+     try {
+       let data = await obj.get("user/me")
+       setUser(data.user)
+       console.log(data);
+     } catch (error) {
+       console.log(error);
+     }
    }
    useEffect(() => {
 
