@@ -30,7 +30,7 @@ function UrlHistory() {
   const editSelectedUrl = async () => {
     if (!selectedUrl) return;
     try {
-      const response = await service.patch(`s/${selectedUrl.shortCode}`, {
+      const response = await service.patch(`shorturl/${selectedUrl.shortCode}`, {
         originalUrl: selectedUrl.originalUrl,
         title: selectedUrl.title,
       });
@@ -50,7 +50,7 @@ function UrlHistory() {
   const deleteUrl = async (shortCode) => {
     if (!window.confirm("Are you sure you want to delete this URL?")) return;
     try {
-      await service.delete(`s/${shortCode}`);
+      await service.delete(`shorturl/${shortCode}`);
       setUrls((prevUrls) => prevUrls.filter((url) => url.shortCode !== shortCode));
     } catch (err) {
       console.error("Failed to delete URL:", err);
