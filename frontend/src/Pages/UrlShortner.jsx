@@ -9,7 +9,7 @@ export default function UrlShortner() {
     <div>
       <Container size="md" my={40}>
         {response ? (
-          <UrlResponse response={response} />
+          <UrlResponse setResponse={setResponse} response={response} />
         ) : (
           <UrlForm setResponse={setResponse} />
         )}
