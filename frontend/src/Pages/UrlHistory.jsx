@@ -29,7 +29,6 @@ function UrlHistory() {
 
   const editSelectedUrl = async () => {
     if (!selectedUrl) return;
-
     try {
       const response = await service.patch(`s/${selectedUrl.shortCode}`, {
         originalUrl: selectedUrl.originalUrl,
@@ -44,6 +43,18 @@ function UrlHistory() {
       setOpen(false);
     } catch (err) {
       console.error("Failed to edit URL:", err);
+    }
+  };
+
+  // Delete handler
+  const deleteUrl = async (shortCode) => {
+    if (!window.confirm("Are you sure you want to delete this URL?")) return;
+    try {
+      await service.delete(`s/${shortCode}`);
+      setUrls((prevUrls) => prevUrls.filter((url) => url.shortCode !== shortCode));
+    } catch (err) {
+      console.error("Failed to delete URL:", err);
+      alert("Failed to delete URL");
     }
   };
   // Fetch data on component mount
@@ -133,7 +144,7 @@ function UrlHistory() {
         }}>
           <IconEdit/>
         </Button>
-        <Button variant="subtle" color="red">
+        <Button variant="subtle" color="red" onClick={() => deleteUrl(url.shortCode)}>
           <IconTrash/>
         </Button>
       </Table.Td>
@@ -143,8 +154,19 @@ function UrlHistory() {
   return (
     <Container size="lg" my="md">
       <Modal opened={open} onClose={() => setOpen(false)} title="Edit URL" centered>
-        <TextInput label="Original URL" placeholder="Enter the original URL" value={selectedUrl ? selectedUrl.originalUrl : ''} />
-        <TextInput label="Title" placeholder="Enter the title" value={selectedUrl ? selectedUrl.title : ''} mt="md"/>
+        <TextInput
+          label="Original URL"
+          placeholder="Enter the original URL"
+          value={selectedUrl ? selectedUrl.originalUrl : ''}
+          onChange={e => setSelectedUrl((prev) => ({ ...prev, originalUrl: e.target.value }))}
+        />
+        <TextInput
+          label="Title"
+          placeholder="Enter the title"
+          value={selectedUrl ? selectedUrl.title : ''}
+          mt="md"
+          onChange={e => setSelectedUrl((prev) => ({ ...prev, title: e.target.value }))}
+        />
         <Button fullWidth mt="md" onClick={editSelectedUrl}>Edit URL</Button>
       </Modal>
       <Group justify="space-between" align="center" mb="md">
