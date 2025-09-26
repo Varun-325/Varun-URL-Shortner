@@ -57,6 +57,9 @@ export const getShortURLController = async (req, res) => {
         message: "Short URL not found",
       });
     }
+    // Increment click count
+    urlRecord.clickCount = (urlRecord.clickCount || 0) + 1;
+    await urlRecord.save();
     console.log("Redirecting to original URL:", urlRecord.originalUrl);
     res.redirect(urlRecord.originalUrl);
   } catch (error) {
@@ -102,31 +105,28 @@ export const updateShortURLController = async (req, res) => {
 
 export const deleteShortURLController = async (req, res) => {
   try {
-    const {shortUrl} = req.params
+    const { shortURL } = req.params;
 
-    const existed = await ShortURL.findOne({shortCode: shortUrl});
-    if(!existed){
+    const existed = await ShortURL.findOne({ shortCode: shortURL });
+    if (!existed) {
       return res.status(404).json({
         status: "NOT_FOUND",
         message: "Short URL not found",
       });
     }
-    
- 
+
     existed.isActive = false;
     await existed.save();
-
- 
 
     res.status(200).json({
       status: "success",
       message: "Short URL deleted successfully",
     });
-  }catch(error){
+  } catch (error) {
     console.error("Error deleting short URL:", error);
     res.status(500).json({
       status: "INTERNAL_SERVER_ERROR",
       message: "Error deleting short URL",
-    })
+    });
   }
-}
+};

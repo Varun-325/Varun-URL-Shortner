@@ -21,11 +21,11 @@ export const getMyUrls = async (req, res) => {
     const skip = (page - 1) * limit;
 
     const [urls, total] = await Promise.all([
-      ShortURL.find({ userId }) // 👈 must match schema field
+      ShortURL.find({ userId, isActive: true })
         .sort({ createdAt: -1 })
         .skip(skip)
         .limit(limit),
-      ShortURL.countDocuments({ userId }),
+      ShortURL.countDocuments({ userId, isActive: true }),
     ]);
 
     return res.status(200).json({
