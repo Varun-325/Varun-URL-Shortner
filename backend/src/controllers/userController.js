@@ -1,27 +1,41 @@
-import { User } from "../models/user/user.model.js"; // Adjust path as needed
+import { User } from "../models/user/user.model.js";
+import { ShortURL } from "../models/shorturl.model.js";
 
+export const getUserProfile = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const data = await User.findById(userId);
+    return res.status(200).json({ user: data });
+  } catch (error) {
+    return res.status(500).json({ message: `Server Error: ${error.message}` });
+  }
+};
 
-export const getUserDetails = async (req, res) => {
- try {
-   const userId = req.user?.id; // Get userId from the authenticated request
+export const getMyUrls = async (req, res) => {
+  try {
+    const userId = req.user.id;
 
+    // pagination support
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = (page - 1) * limit;
 
-   if (!userId) {
-     return res.status(401).json({ message: "User not authenticated." });
-   }
+    const [urls, total] = await Promise.all([
+      ShortURL.find({ userId }) // 👈 must match schema field
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit),
+      ShortURL.countDocuments({ userId }),
+    ]);
 
-
-   const user = await User.findById(userId)
-   if (!user) {
-     return res.status(404).json({ message: "User not found." });
-   }
-   
-   res.status(200).json(user);
-
- } catch (error) {
-
-   console.error("Error fetching user details:", error);
-   res.status(500).json({ message: "Server error", error: error.message });
-
- }
+    return res.status(200).json({
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+      urls,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: `Server Error: ${error.message}` });
+  }
 };
